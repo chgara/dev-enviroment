@@ -6,7 +6,7 @@ set -e
 
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root"
-  exit
+  exit 1
 fi
 
 # Ensure yay, git, and curl are installed
@@ -38,7 +38,8 @@ for app in "${apps[@]}"; do
       if ! pacman -S --noconfirm $app; then
         echo "Package $app not found in pacman, trying yay..."
         if ! yay -S --noconfirm $app; then
-          echo "Failed to install $app with both pacman and yay. Continuing..."
+          echo "Failed to install $app with both pacman and yay."
+          exit 1
         fi
       fi
   else
