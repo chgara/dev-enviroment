@@ -18,7 +18,9 @@ RUN cd yay-bin && makepkg -si --noconfirm
 RUN rm -rf yay-bin
 
 # Run the curl command with sudo inside the phobos folder
-RUN sudo curl -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
+USER root
+WORKDIR /home/phobos
+RUN curl -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
 
 # Default command to run when the container starts
 CMD ["/bin/bash", "-c", "echo 'phobos:$(openssl passwd -1)' | chpasswd && exec /bin/bash"]
