@@ -48,6 +48,6 @@ find "$restore_dir" -type f -o -type d | while read file; do
 done
 
 # Install neovim config
-sudo curl -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
+curl -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
 
 echo "Dotfiles setup complete."
