@@ -1,5 +1,4 @@
 .zshrc
-.zsh_history
 zsh
 .oh-my-zsh
 .config/neofetch
