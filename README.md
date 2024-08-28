@@ -1,1 +1,1 @@
-curl -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
+curl -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
