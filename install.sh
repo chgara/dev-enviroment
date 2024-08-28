@@ -9,17 +9,21 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-pacman -S --noconfirm git base-devel
+# Ensure yay, git, and curl are installed
+if ! command -v yay &> /dev/null; then
+  echo "yay is not installed. Please install yay and rerun the script."
+  exit 1
+fi
 
-# Install yay 
-pacman -S --needed git base-devel
-git clone https://aur.archlinux.org/yay-bin.git
-cd yay-bin
-makepkg -si
+if ! command -v git &> /dev/null; then
+  echo "git is not installed. Please install git and rerun the script."
+  exit 1
+fi
 
-# Delete yay
-rm -rf yay-bin
-
+if ! command -v curl &> /dev/null; then
+  echo "curl is not installed. Please install curl and rerun the script."
+  exit 1
+fi
 
 # Clone the repository
 git clone https://github.com/chgara/dev-enviroment ~/.config/dev-environment
