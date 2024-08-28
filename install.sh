@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -e
 # This script sets up terminal-related dotfiles for this machine.
 # It is located in the .config/dev-environment directory, which is a git repository.
 # The repository can be cloned to set up the dotfiles on any other machine.
@@ -8,17 +8,30 @@ if [ "$EUID" -ne 0 ]; then
   echo "Please run as root"
   exit
 fi
+
+pacman -S --noconfirm git base-devel
+
+# Install yay 
+pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
+makepkg -si
+
+# Delete yay
+rm -rf yay-bin
+
+
 # Clone the repository
-git clone https://your-repo-url.git ~/.config/dev-environment
+git clone https://github.com/chgara/dev-enviroment ~/.config/dev-environment
 
 cd ~/.config/dev-environment
 
 # Install applications
-apps=(libnotify neofetch zsh ranger git, autojump, fzf, nodejs, npm, pnpm)
+apps=(curl wget libnotify neofetch zsh ranger git autojump fzf nodejs npm pnpm)
 for app in "${apps[@]}"; do
   if ! command -v $app &> /dev/null; then
     echo "Installing $app..."
-      if ! sudo pacman -S --noconfirm $app; then
+      if ! pacman -S --noconfirm $app; then
         echo "Package $app not found in pacman, trying yay..."
         if ! yay -S --noconfirm $app; then
           echo "Failed to install $app with both pacman and yay. Continuing..."
