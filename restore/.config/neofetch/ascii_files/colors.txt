@@ -1,0 +1,8 @@
+sword-color.txt 3 6 0
+eagle.txt 15 3 3 94
+ubuntu 15 3
+merlin.txt 10 65 11
+gosht-skull 3
+ibm 74 42 1
+tux 39 232 250 220 39 39
+--ascii_distro mac
