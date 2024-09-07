@@ -20,7 +20,7 @@ RUN git clone https://aur.archlinux.org/yay.git \
   && rm -rf .cache yay
 
 # Run the curl command with sudo inside the phobos folder
-RUN curl -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sudo sh
+RUN curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
 
 # Default command to run when the container starts
 CMD ["/bin/bash", "-c", "echo 'phobos:$(openssl passwd -1)' | chpasswd && exec /bin/bash"]

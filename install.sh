@@ -4,11 +4,6 @@ set -e
 # It is located in the .config/dev-environment directory, which is a git repository.
 # The repository can be cloned to set up the dotfiles on any other machine.
 
-if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root"
-  exit 1
-fi
-
 # Ensure yay, git, and curl are installed
 if ! command -v yay &> /dev/null; then
   echo "yay is not installed. Please install yay and rerun the script."
@@ -67,6 +62,6 @@ done
 # install starship
 curl -sS https://starship.rs/install.sh | sudo sh
 # Install neovim config
-curl -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
+curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
 
 echo "Dotfiles setup complete."
