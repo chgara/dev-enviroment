@@ -60,7 +60,7 @@ find "$restore_dir" -type f -o -type d | while read file; do
 done
 
 # install starship
-curl -sS https://starship.rs/install.sh | sudo sh
+curl -sS https://starship.rs/install.sh | sh -s -- --yes
 # Install neovim config
 curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
 
