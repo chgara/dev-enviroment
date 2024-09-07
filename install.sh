@@ -45,6 +45,8 @@ for app in "${apps[@]}"; do
   fi
 done
 
+# configure git
+git config --global credential.helper store
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
