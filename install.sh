@@ -19,7 +19,6 @@ if ! command -v git &> /dev/null; then
   echo "git is not installed. Please install git and rerun the script."
   yay -S --noconfirm git
 fi
-fi
 
 if ! command -v curl &> /dev/null; then
   echo "curl is not installed. Please install curl and rerun the script."
