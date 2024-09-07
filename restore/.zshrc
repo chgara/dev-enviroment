@@ -70,3 +70,6 @@ esac
 # pnpm
 [ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
+export CLR_ICU_VERSION_OVERRIDE=$(pacman -Q icu | awk '{split($0,a," ");print a[2]}' | awk '{split($0,a,"-");print a[1]}')
+export PATH="$PATH:~/.dotnet/tools"
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"

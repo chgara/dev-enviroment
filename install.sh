@@ -17,12 +17,13 @@ fi
 
 if ! command -v git &> /dev/null; then
   echo "git is not installed. Please install git and rerun the script."
-  exit 1
+  yay -S --noconfirm git
+fi
 fi
 
 if ! command -v curl &> /dev/null; then
   echo "curl is not installed. Please install curl and rerun the script."
-  exit 1
+  yay -S --noconfirm curl
 fi
 
 # Clone the repository
@@ -35,13 +36,10 @@ apps=(curl wget libnotify neofetch zsh ranger git autojump fzf nodejs npm pnpm)
 for app in "${apps[@]}"; do
   if ! command -v $app &> /dev/null; then
     echo "Installing $app..."
-      if ! pacman -S --noconfirm $app; then
-        echo "Package $app not found in pacman, trying yay..."
-        if ! yay -S --noconfirm $app; then
-          echo "Failed to install $app with both pacman and yay."
-          exit 1
-        fi
-      fi
+    if ! yay -S --noconfirm $app; then
+      echo "Failed to install $app with yay."
+      exit 1
+    fi
   else
     echo "$app is already installed"
   fi
@@ -65,6 +63,8 @@ find "$restore_dir" -type f -o -type d | while read file; do
   cp -r "$file" "$target_path"
 done
 
+# install starship
+curl -sS https://starship.rs/install.sh | sudo sh
 # Install neovim config
 curl -L https://github.com/chgara/nvim-config/raw/master/install.sh | sh
 
