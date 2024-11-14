@@ -1,7 +1,7 @@
 FROM archlinux/archlinux:base-devel
 
-# Install packages and yay
-RUN pacman -Syu --noconfirm git sudo
+# Install packages, yay, and OpenSSH
+RUN pacman -Syu --noconfirm git sudo openssh
 
 
 ARG user=phobos
@@ -22,5 +22,16 @@ RUN git clone https://aur.archlinux.org/yay.git \
 # Run the curl command with sudo inside the phobos folder
 RUN curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
 
-# Default command to run when the container starts
-CMD ["/bin/bash", "-c", "echo 'Dev enviroment container started' && /bin/bash"]
+# Configure SSH
+RUN sudo ssh-keygen -A \
+    && sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config \
+    && sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Set a password for the user (change 'password' to your desired password)
+RUN echo "$user:password" | sudo chpasswd
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]

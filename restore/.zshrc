@@ -1,4 +1,5 @@
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+(cat ~/.cache/wal/sequences &)
 export ZSH="$HOME/.oh-my-zsh"
 
 bgnotify_bell=false   ## disable terminal bell
@@ -40,6 +41,7 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias logout="loginctl terminate-user phobos"
 
+echo ""
 echo ""
 neofetch --ascii ~/.config/neofetch/ascii_files/ibm.txt --ascii_colors 11 11 11
 
