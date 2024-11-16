@@ -44,16 +44,25 @@ git config --global credential.helper store
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+is_interactive() {
+  [ -z "$NONINTERACTIVE" ] && [ -t 0 ] && [ -t 1 ]
+}
+
+
 restore_dir=~/.config/dev-environment/restore
 find "$restore_dir" -type f -o -type d | while read file; do
   relative_path="${file#$restore_dir/}"
   target_path="$HOME/$relative_path"
   if [ -e "$target_path" ]; then
-    read -p "$target_path already exists. Do you want to overwrite it? (y/n): " choice
-    if [ "$choice" != "y" ]; then
-      echo "Skipping $relative_path"
-      continue
-    fi
+      if is_interactive; then
+          read -p "$target_path already exists. Do you want to overwrite it? (y/n): " choice
+          if [ "$choice" != "y" ]; then
+              echo "Skipping $relative_path"
+              continue
+          fi
+      else
+          echo "Non-interactive mode: Overwriting $target_path"
+      fi 
   fi
   mkdir -p "$(dirname "$target_path")"
   cp -r "$file" "$target_path"

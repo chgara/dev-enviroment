@@ -1,10 +1,13 @@
 FROM archlinux/archlinux:base-devel
 
+ARG user=phobos
+ARG FORCE_COLOR=1
+ARG NONINTERACTIVE=1
+
 # Install packages, yay, and OpenSSH
 RUN pacman -Syu --noconfirm git sudo openssh
 
 
-ARG user=phobos
 RUN useradd --system --create-home $user \
     && echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/$user
 USER $user
@@ -20,8 +23,9 @@ RUN git clone https://aur.archlinux.org/yay.git \
     && rm -rf .cache yay
 
 # Run the curl command with sudo inside the phobos folder
-# RUN curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
-RUN set -x && curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
+# RUN curl -s -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | NONINTERACTIVE=$NONINTERACTIVE sh
+RUN set -x && curl -s -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | NONINTERACTIVE=$NONINTERACTIVE sh
+
 
 # Configure SSH
 RUN sudo ssh-keygen -A \
