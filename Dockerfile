@@ -6,21 +6,22 @@ RUN pacman -Syu --noconfirm git sudo openssh
 
 ARG user=phobos
 RUN useradd --system --create-home $user \
-  && echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/$user
+    && echo "$user ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/$user
 USER $user
 WORKDIR /home/$user
 
 
 # Install yay
 RUN git clone https://aur.archlinux.org/yay.git \
-  && cd yay \
-  && makepkg -sri --needed --noconfirm \
-  && cd \
-  # Clean up
-  && rm -rf .cache yay
+    && cd yay \
+    && makepkg -sri --needed --noconfirm \
+    && cd \
+    # Clean up
+    && rm -rf .cache yay
 
 # Run the curl command with sudo inside the phobos folder
-RUN curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
+# RUN curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
+RUN set -x && curl -H 'Cache-Control: no-cache, no-store' -L https://github.com/chgara/dev-enviroment/raw/master/install.sh | sh
 
 # Configure SSH
 RUN sudo ssh-keygen -A \

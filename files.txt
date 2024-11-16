@@ -1,6 +1,5 @@
 .zshrc
 zsh
-.oh-my-zsh
 .config/neofetch
 .config/bpytop
 .config/ranger
