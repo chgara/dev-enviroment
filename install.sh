@@ -57,7 +57,7 @@ git clone https://github.com/chgara/dev-enviroment ~/.config/dev-environment
 cd ~/.config/dev-environment
 
 # Install applications
-apps=(curl wget libnotify neofetch zsh ranger git fzf nodejs npm)
+apps=(curl wget neofetch zsh ranger git fzf nodejs npm)
 
 # Add distribution-specific packages
 if [ "$PKG_MANAGER" = "apt" ]; then
@@ -67,7 +67,7 @@ if [ "$PKG_MANAGER" = "apt" ]; then
     install_package npm && sudo npm install -g pnpm
 elif [ "$PKG_MANAGER" = "yay" ]; then
     # Arch specific package names
-    apps+=(autojump pnpm)
+    apps+=(autojump pnpm libnotify)
 fi
 
 for app in "${apps[@]}"; do
