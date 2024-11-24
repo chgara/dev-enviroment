@@ -5,16 +5,21 @@ set -e
 # The repository can be cloned to set up the dotfiles on any other machine.
 
 # Detect the package manager
-if command -v yay &> /dev/null; then
-    PKG_MANAGER="yay"
-    INSTALL_CMD="yay -S --noconfirm"
-elif command -v apt &> /dev/null; then
+
+# Detect the package manager
+if command -v apt &> /dev/null; then
     PKG_MANAGER="apt"
     INSTALL_CMD="sudo apt install -y"
+    echo "Using apt package manager"
+elif command -v yay &> /dev/null; then
+    PKG_MANAGER="yay"
+    INSTALL_CMD="yay -S --noconfirm"
+    echo "Using yay package manager"
 else
-    echo "Neither yay nor apt found. This script supports Arch-based and Debian-based systems only."
+    echo "Neither apt nor yay found. This script supports Arch-based and Debian-based systems only."
     exit 1
 fi
+
 # Function to install a package
 install_package() {
     package=$1
