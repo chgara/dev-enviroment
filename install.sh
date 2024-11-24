@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 # This script sets up terminal-related dotfiles for this machine.
 # It is located in the .config/dev-environment directory, which is a git repository.
@@ -7,11 +7,11 @@ set -e
 # Detect the package manager
 
 # Detect the package manager
-if command -v apt &> /dev/null; then
+if command -v apt &>/dev/null; then
     PKG_MANAGER="apt"
     INSTALL_CMD="sudo apt install -y"
     echo "Using apt package manager"
-elif command -v yay &> /dev/null; then
+elif command -v yay &>/dev/null; then
     PKG_MANAGER="yay"
     INSTALL_CMD="yay -S --noconfirm"
     echo "Using yay package manager"
@@ -23,7 +23,7 @@ fi
 # Function to install a package
 install_package() {
     package=$1
-    if ! command -v $package &> /dev/null; then
+    if ! command -v $package &>/dev/null; then
         echo "Installing $package..."
         if ! $INSTALL_CMD $package; then
             echo "Failed to install $package with $PKG_MANAGER"
@@ -36,19 +36,19 @@ install_package() {
 
 # Ensure git and curl are installed
 
-if ! command -v git &> /dev/null; then
-  echo "git is not installed. Installing git..."
-  $INSTALL_CMD git
+if ! command -v git &>/dev/null; then
+    echo "git is not installed. Installing git..."
+    $INSTALL_CMD git
 fi
 
-if ! command -v curl &> /dev/null; then
-  echo "curl is not installed. Installing curl..."
-  $INSTALL_CMD curl
-  fi
-  
-  # Update package lists if using apt
+if ! command -v curl &>/dev/null; then
+    echo "curl is not installed. Installing curl..."
+    $INSTALL_CMD curl
+fi
+
+# Update package lists if using apt
 if [ "$PKG_MANAGER" = "apt" ]; then
-  sudo apt update
+    sudo apt update
 fi
 
 # Clone the repository
@@ -71,7 +71,7 @@ elif [ "$PKG_MANAGER" = "yay" ]; then
 fi
 
 for app in "${apps[@]}"; do
-  install_package "$app"
+    install_package "$app"
 done
 
 # configure git
@@ -80,26 +80,26 @@ git config --global credential.helper store
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 is_interactive() {
-  [ -z "$NONINTERACTIVE" ] && [ -t 0 ] && [ -t 1 ]
+    [ -z "$NONINTERACTIVE" ] && [ -t 0 ] && [ -t 1 ]
 }
 
 restore_dir=~/.config/dev-environment/restore
 find "$restore_dir" -type f -o -type d | while read file; do
-  relative_path="${file#$restore_dir/}"
-  target_path="$HOME/$relative_path"
-  if [ -e "$target_path" ]; then
-      if is_interactive; then
-          read -p "$target_path already exists. Do you want to overwrite it? (y/n): " choice
-          if [ "$choice" != "y" ]; then
-              echo "Skipping $relative_path"
-              continue
-          fi
-      else
-          echo "Non-interactive mode: Overwriting $target_path"
-      fi 
-  fi
-  mkdir -p "$(dirname "$target_path")"
-  cp -r "$file" "$target_path"
+    relative_path="${file#$restore_dir/}"
+    target_path="$HOME/$relative_path"
+    if [ -e "$target_path" ]; then
+        if is_interactive; then
+            read -p "$target_path already exists. Do you want to overwrite it? (y/n): " choice
+            if [ "$choice" != "y" ]; then
+                echo "Skipping $relative_path"
+                continue
+            fi
+        else
+            echo "Non-interactive mode: Overwriting $target_path"
+        fi
+    fi
+    mkdir -p "$(dirname "$target_path")"
+    cp -r "$file" "$target_path"
 done
 
 # install starship
