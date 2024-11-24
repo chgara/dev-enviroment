@@ -4,20 +4,46 @@ set -e
 # It is located in the .config/dev-environment directory, which is a git repository.
 # The repository can be cloned to set up the dotfiles on any other machine.
 
-# Ensure yay, git, and curl are installed
-if ! command -v yay &> /dev/null; then
-  echo "yay is not installed. Please install yay and rerun the script."
-  exit 1
+# Detect the package manager
+if command -v yay &> /dev/null; then
+    PKG_MANAGER="yay"
+    INSTALL_CMD="yay -S --noconfirm"
+elif command -v apt &> /dev/null; then
+    PKG_MANAGER="apt"
+    INSTALL_CMD="sudo apt install -y"
+else
+    echo "Neither yay nor apt found. This script supports Arch-based and Debian-based systems only."
+    exit 1
 fi
+# Function to install a package
+install_package() {
+    package=$1
+    if ! command -v $package &> /dev/null; then
+        echo "Installing $package..."
+        if ! $INSTALL_CMD $package; then
+            echo "Failed to install $package with $PKG_MANAGER"
+            exit 1
+        fi
+    else
+        echo "$package is already installed"
+    fi
+}
+
+# Ensure git and curl are installed
 
 if ! command -v git &> /dev/null; then
-  echo "git is not installed. Please install git and rerun the script."
-  yay -S --noconfirm git
+  echo "git is not installed. Installing git..."
+  $INSTALL_CMD git
 fi
 
 if ! command -v curl &> /dev/null; then
-  echo "curl is not installed. Please install curl and rerun the script."
-  yay -S --noconfirm curl
+  echo "curl is not installed. Installing curl..."
+  $INSTALL_CMD curl
+  fi
+  
+  # Update package lists if using apt
+if [ "$PKG_MANAGER" = "apt" ]; then
+  sudo apt update
 fi
 
 # Clone the repository
@@ -26,17 +52,21 @@ git clone https://github.com/chgara/dev-enviroment ~/.config/dev-environment
 cd ~/.config/dev-environment
 
 # Install applications
-apps=(curl wget libnotify neofetch zsh ranger git autojump fzf nodejs npm pnpm)
+apps=(curl wget libnotify neofetch zsh ranger git fzf nodejs npm)
+
+# Add distribution-specific packages
+if [ "$PKG_MANAGER" = "apt" ]; then
+    # Ubuntu/Debian specific package names
+    apps+=(autojump)
+    # Install pnpm through npm on Ubuntu
+    install_package npm && npm install -g pnpm
+elif [ "$PKG_MANAGER" = "yay" ]; then
+    # Arch specific package names
+    apps+=(autojump pnpm)
+fi
+
 for app in "${apps[@]}"; do
-  if ! command -v $app &> /dev/null; then
-    echo "Installing $app..."
-    if ! yay -S --noconfirm $app; then
-      echo "Failed to install $app with yay."
-      exit 1
-    fi
-  else
-    echo "$app is already installed"
-  fi
+  install_package "$app"
 done
 
 # configure git
@@ -47,7 +77,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 is_interactive() {
   [ -z "$NONINTERACTIVE" ] && [ -t 0 ] && [ -t 1 ]
 }
-
 
 restore_dir=~/.config/dev-environment/restore
 find "$restore_dir" -type f -o -type d | while read file; do
