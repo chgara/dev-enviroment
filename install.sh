@@ -64,7 +64,7 @@ if [ "$PKG_MANAGER" = "apt" ]; then
     # Ubuntu/Debian specific package names
     apps+=(autojump)
     # Install pnpm through npm on Ubuntu
-    install_package npm && npm install -g pnpm
+    install_package npm && sudo npm install -g pnpm
 elif [ "$PKG_MANAGER" = "yay" ]; then
     # Arch specific package names
     apps+=(autojump pnpm)
